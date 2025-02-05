@@ -1,4 +1,4 @@
-param keyVaultName string = 'licenseKeyVault'
+param keyVaultName string = 'licenseKeyVault-${uniqueString(resourceGroup().id)'
 param privateEndpointName string = 'licenseKeyVault'
 param accessPolicies array = []  // Default to empty array if not passed
 param location string = 'northeurope'  // Explicitly set location to North Europe
