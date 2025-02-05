@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  name: 'Self-Hosted Pool'  # Ensure this is the correct pool name where your self-hosted agent is registered
+  name: 'Default'  # Ensure this is the correct pool name where your self-hosted agent is registered
 
 variables:
   AZURE_SUBSCRIPTION: 'axwaymanishdepops1'
