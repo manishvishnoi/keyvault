@@ -20,7 +20,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-03-01' = {
   location: resourceGroup().location
   properties: {
     subnet: {
-      id: '/subscriptions/9436480f-c708-4e0f-aba3-3d5af128e84a/resourceGroups/RG-mavishnoi/providers/Microsoft.Network/virtualNetworks/Test/subnets/Test'
+      id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'Test', 'Test')  # Correct use of resourceId for subnet
     }
     privateLinkServiceConnections: [
       {
@@ -31,7 +31,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-03-01' = {
             description: 'Auto-approved'
           }
           privateLinkServiceConnection: {
-            id: keyVault.id
+            id: keyVault.id  # Correct reference to key vault ID
           }
         }
       }
