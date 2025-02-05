@@ -21,7 +21,7 @@ jobs:
       scriptType: 'pscore'  # PowerShell Core for Windows
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az deployment group create --resource-group $(RESOURCE_GROUP) --template-file keyvault.bicep --parameters keyVaultName=$(KEY_VAULT_NAME) privateEndpointName=$(KEY_VAULT_NAME)-pe
+        az deployment group create --resource-group $(RESOURCE_GROUP) --template-file ./vault.bicep --parameters keyVaultName=$(KEY_VAULT_NAME) privateEndpointName=$(KEY_VAULT_NAME)-pe
 
   - task: PowerShell@2
     displayName: 'Convert License File to Base64'
