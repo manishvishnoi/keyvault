@@ -7,7 +7,7 @@ pool:
 variables:
   AZURE_SUBSCRIPTION: 'axwaymanishdepops1'
   RESOURCE_GROUP: 'RG-mavishnoi'
-  KEY_VAULT_NAME: 'licenseKeyVault3345'
+  KEY_VAULT_NAME: 'licenseKeyVault3346'
   SECRET_NAME: 'license-file'
   
 jobs:
@@ -28,7 +28,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        $filePath = "$(Build.SourcesDirectory)\license.lic"
+        $filePath = "C:\Users\mavishnoi\agent\license.lic"
         if (Test-Path $filePath) {
           $base64 = [Convert]::ToBase64String([System.IO.File]::ReadAllBytes($filePath))
           Write-Output "##vso[task.setvariable variable=LICENSE_BASE64]$base64"
