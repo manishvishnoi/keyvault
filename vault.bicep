@@ -1,6 +1,6 @@
 param keyVaultName string = 'licenseKeyVault'
 param privateEndpointName string = 'licenseKeyVault'
-param accessPolicies array
+param accessPolicies array = []  // Default to empty array if not passed
 
 resource keyVault 'Microsoft.KeyVault/vaults@2021-06-01' = {
   name: keyVaultName
@@ -31,7 +31,8 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-03-01' = {
             description: 'Auto-approved'
           }
           privateLinkServiceConnection: {
-            id: keyVault.id
+            privateLinkServiceId: keyVault.id  // Correct structure for privateLinkServiceId
+            groupIds: ['vault']  // Correct groupId for KeyVault
           }
         }
       }
