@@ -1,9 +1,9 @@
-param keyVaultName string = 'licenseKeyVault-3344556677'
+param keyVaultName string = 'licenseKeyVault-${uniqueString(resourceGroup().id)}'
 param privateEndpointName string = 'licenseKeyVault'
 param accessPolicies array = []  // Default to empty array if not passed
 param location string = 'northeurope'  // Explicitly set location to North Europe
 
-resource keyVault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = {  // Use 2021-06-01-preview API version
+resource keyVault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = {
   name: keyVaultName
   location: location  // Set location to North Europe
   properties: {
@@ -31,10 +31,8 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-03-01' = {
             status: 'Approved'
             description: 'Auto-approved'
           }
-          privateLinkServiceConnection: {
-            privateLinkServiceId: keyVault.id
-            groupIds: ['vault']
-          }
+          privateLinkServiceId: keyVault.id  // Correct property for the private link service
+          groupIds: ['vault']  // This specifies the group of the private link service (KeyVault)
         }
       }
     ]
