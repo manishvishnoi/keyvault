@@ -28,6 +28,7 @@ stages:
 
 - stage: UploadSecret
   displayName: 'Upload License File to Key Vault'
+  dependsOn: DeployKeyVault  # Ensures this stage runs after DeployKeyVault
   jobs:
   - job: Upload
     displayName: 'Upload License File'
