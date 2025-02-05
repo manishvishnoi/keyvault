@@ -1,10 +1,10 @@
 param location string = 'northeurope'
-param resourceGroupName string
-param vnetName string
-param subnetName string
-param keyVaultName string
-param privateEndpointName string
-param secretName string
+param resourceGroupName string = 'RG-mavishnoi'
+param vnetName string = 'Test'
+param subnetName string = 'Test'
+param keyVaultName string = 'licenseKeyVault'
+param privateEndpointName string = 'licenseKeyVault'
+param secretName string = 'license-file'
 
 
 resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' = {
