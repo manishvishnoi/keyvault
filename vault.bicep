@@ -1,53 +1,40 @@
-param location string = 'northeurope'
-param resourceGroupName string = 'RG-mavishnoi'
-param vnetName string = 'Test'
-param subnetName string = 'Test'
 param keyVaultName string = 'licenseKeyVault'
 param privateEndpointName string = 'licenseKeyVault'
-param secretName string = 'license-file'
+param accessPolicies array
 
-
-resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' = {
+resource keyVault 'Microsoft.KeyVault/vaults@2021-06-01' = {
   name: keyVaultName
-  location: location
+  location: resourceGroup().location
   properties: {
     sku: {
       family: 'A'
       name: 'standard'
     }
-    tenantId: subscription().tenantId
-    enablePurgeProtection: true
-    enableSoftDelete: true
+    tenantId: '9436480f-c708-4e0f-aba3-3d5af128e84a'  # Replace with actual tenant ID
+    accessPolicies: accessPolicies
   }
 }
 
-resource vnet 'Microsoft.Network/virtualNetworks@2023-02-01' existing = {
-  name: vnetName
-  scope: resourceGroup(resourceGroupName)
-}
-
-resource subnet 'Microsoft.Network/virtualNetworks/subnets@2023-02-01' existing = {
-  name: subnetName
-  parent: vnet
-}
-
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2023-02-01' = {
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-03-01' = {
   name: privateEndpointName
-  location: location
+  location: resourceGroup().location
   properties: {
     subnet: {
-      id: subnet.id
+      id: '/subscriptions/9436480f-c708-4e0f-aba3-3d5af128e84a/resourceGroups/RG-mavishnoi/providers/Microsoft.Network/virtualNetworks/Test/subnets/Test'
     }
     privateLinkServiceConnections: [
       {
-        name: '${keyVaultName}-connection'
+        name: 'keyvault-connection'
         properties: {
-          privateLinkServiceId: keyVault.id
-          groupIds: ['vault']
+          privateLinkServiceConnectionState: {
+            status: 'Approved'
+            description: 'Auto-approved'
+          }
+          privateLinkServiceConnection: {
+            id: keyVault.id
+          }
         }
       }
     ]
   }
 }
-
-output keyVaultUri string = keyVault.properties.vaultUri
