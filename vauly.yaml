@@ -1,0 +1,56 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'  # Windows agent
+
+variables:
+  AZURE_SUBSCRIPTION: 'axwaymanishdepops1'
+  RESOURCE_GROUP: 'RG-mavishnoi'
+  KEY_VAULT_NAME: 'licenseKeyVault'
+  SECRET_NAME: 'license-file'
+
+stages:
+- stage: DeployKeyVault
+  displayName: 'Deploy Key Vault'
+  jobs:
+  - job: Deploy
+    displayName: 'Deploy Key Vault with Private Endpoint'
+    steps:
+    - task: AzureCLI@2
+      displayName: 'Deploy Bicep File'
+      inputs:
+        azureSubscription: $(AZURE_SUBSCRIPTION)
+        scriptType: 'pscore'  # PowerShell Core for Windows
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az deployment group create --resource-group $(RESOURCE_GROUP) --template-file keyvault.bicep --parameters keyVaultName=$(KEY_VAULT_NAME) privateEndpointName=$(KEY_VAULT_NAME)-pe
+
+- stage: UploadSecret
+  displayName: 'Upload License File to Key Vault'
+  jobs:
+  - job: Upload
+    displayName: 'Upload License File'
+    steps:
+    - task: PowerShell@2
+      displayName: 'Convert License File to Base64'
+      inputs:
+        targetType: 'inline'
+        script: |
+          $filePath = "$(Build.SourcesDirectory)\license.lic"
+          if (Test-Path $filePath) {
+            $base64 = [Convert]::ToBase64String([System.IO.File]::ReadAllBytes($filePath))
+            Write-Output "##vso[task.setvariable variable=LICENSE_BASE64]$base64"
+          } else {
+            Write-Host "Error: License file not found!"
+            exit 1
+          }
+
+    - task: AzureCLI@2
+      displayName: 'Upload Secret to Key Vault'
+      inputs:
+        azureSubscription: $(AZURE_SUBSCRIPTION)
+        scriptType: 'pscore'  # PowerShell Core for Windows
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az keyvault secret set --vault-name $(KEY_VAULT_NAME) --name $(SECRET_NAME) --value "$(LICENSE_BASE64)"
