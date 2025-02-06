@@ -7,7 +7,7 @@ pool:
 variables:
   AZURE_SUBSCRIPTION: 'axwaymanishdepops1'
   RESOURCE_GROUP: 'RG-mavishnoi'
-  KEY_VAULT_NAME: 'licenseKeyVault3347'
+  KEY_VAULT_NAME: 'licenseKeyVault3348'
   SECRET_NAME: 'license-file'
   
 jobs:
