@@ -11,7 +11,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = {
       family: 'A'
       name: 'standard'
     }
-    tenantId: '9436480f-c708-4e0f-aba3-3d5af128e84a'  // Replace with actual tenant ID
+    tenantId: '300f59df-78e6-436f-9b27-b64973e34f7d'  // Replace with actual tenant ID
     accessPolicies: accessPolicies
   }
 }
